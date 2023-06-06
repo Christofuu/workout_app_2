@@ -49,8 +49,7 @@ passport.use(new GoogleStrategy({
 passport.serializeUser(function(user, cb) {
     process.nextTick(function()  {
         return cb(null, {
-            email: user.email,
-            username: user.username
+            email: user.email
         });
     });
 });

@@ -27,9 +27,9 @@ router.get('/google', passport.authenticate('google', { scope: 'profile' }),
   res.redirect('/');
 });
 
-router.get('/auth/google/callback', 
+router.get('/google/callback', 
   passport.authenticate('google', {
-    sucessRedirect: '/protected', 
+    sucessRedirect: '/auth/protected', 
     failureRedirect: '/login' 
 }),
   function(req, res) {

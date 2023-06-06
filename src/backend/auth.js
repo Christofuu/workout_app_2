@@ -4,7 +4,7 @@
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../models/User');
+const User = require('../backend/models/User');
 
 /**
  * App Variables
@@ -14,9 +14,6 @@ const PORT = process.env.REACT_APP_PORT || "8000";
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
 
-
-router.use(passport.initialize());
-router.use(passport.session());
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,

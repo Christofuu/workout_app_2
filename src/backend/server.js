@@ -1,9 +1,12 @@
-import 'dotenv/config';
-import express from "express";
-import mongoose from "mongoose";
+require('dotenv').config();
+const express = require("express");
+const mongoose = require("mongoose");
+const authrouter = require('../backend/routers/authrouter');
 const app = express();
 const PORT = process.env.REACT_APP_PORT;
 const URI = process.env.REACT_APP_MONGO_URI;
+
+app.use("/auth", authrouter);
 
 mongoose.connect(URI, {
     useNewUrlParser: true

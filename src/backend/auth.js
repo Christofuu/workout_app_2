@@ -1,9 +1,22 @@
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import passport from 'passport-google-oauth20';
-import User from "User";
-const PORT = process.env.REACT_APP_PORT;
+// /**
+//  *  Required External Modules
+//  */
+
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const User = require('../models/User');
+
+/**
+ * App Variables
+ */
+
+const PORT = process.env.REACT_APP_PORT || "8000";
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
+
+
+router.use(passport.initialize());
+router.use(passport.session());
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
@@ -35,6 +48,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+
 passport.serializeUser(function(user, cb) {
     process.nextTick(function()  {
         return cb(null, {
@@ -50,4 +64,4 @@ passport.deserializeUser(function(user, cb) {
     });
 });
 
-module.exports = auth;
+module.exports = passport;

@@ -1,12 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
+const SECRET = process.env.REACT_APP_SESSION_SECRET;
 require('../auth.js');
 
 const router = express.Router();
 
 router.use(require('express-session')({
-  secret: 'unga bunga',
-  resave: true,
+  secret: SECRET,
+  resave: false,
   saveUninitialized: true,
 }));
 router.use(passport.initialize());
@@ -23,16 +25,19 @@ router.get('/', (req, res) => {
 router.get('/google', passport.authenticate('google', { scope: 'profile' }), );
 
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/google' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    console.log("User: ", req.user);
-    res.redirect('/protected');
-  }
+  passport.authenticate('google', {
+    successRedirect: '/auth/protected', 
+    failureRedirect: '/auth/google/failure' }),
 );
 
 router.get('/protected', isLoggedIn, (req, res) => {
-    res.send('Hello!');
+    console.log("authentication successful");
+    res.send(`Hello ${req.user.username}`);
 });
+
+router.get('/google/failure', (req, res) => {
+  res.send('Failed to authenticate..');
+  console.log('Failed to authenticate..');
+})
 
 module.exports = router;

@@ -5,6 +5,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../backend/models/User');
+require('dotenv').config();
 
 /**
  * App Variables
@@ -26,6 +27,7 @@ passport.use(new GoogleStrategy({
       if (currentUser) {
 
         console.log('user is: ' + currentUser);
+        cb(null, currentUser);
       } else {
         new User({
           username: profile.displayName,
@@ -34,23 +36,23 @@ passport.use(new GoogleStrategy({
           lastName: profile.family_name
         }).save().then((newUser) => {
           console.log('new user created: ' + newUser);
+          cb(null, newUser);
         });
       }
     })
-    console.log(profile);
 }));
 
 
 passport.serializeUser(function(user, cb) {
     process.nextTick(function()  {
-        return cb(null, { id: user.id, username: user.username, name: user.given_name
-        });
+        return cb(null, user.id);
     });
 });
 
-passport.deserializeUser(function(user, cb) {
+passport.deserializeUser(function(id, cb) {
     process.nextTick(function() {
-        return cb(null, user);
+      User.findById(id).then((user) =>
+      cb(null, user))
     });
 });
 

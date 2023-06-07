@@ -20,23 +20,16 @@ router.get('/', (req, res) => {
     res.send('<a href="/auth/google">Authenicate with Google</a>')
 });
 
-router.get('/google', passport.authenticate('google', { scope: 'profile' }), 
-  function(req, res) {
-  // Successful authentication, redirect home.
-  console.log("User: ", req.user);
-  res.redirect('/');
-});
+router.get('/google', passport.authenticate('google', { scope: 'profile' }), );
 
 router.get('/google/callback', 
-  passport.authenticate('google', {
-    sucessRedirect: '/auth/protected', 
-    failureRedirect: '/login' 
-}),
+  passport.authenticate('google', { failureRedirect: '/google' }),
   function(req, res) {
     // Successful authentication, redirect home.
     console.log("User: ", req.user);
-    res.redirect('/');
-  });
+    res.redirect('/protected');
+  }
+);
 
 router.get('/protected', isLoggedIn, (req, res) => {
     res.send('Hello!');

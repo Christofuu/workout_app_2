@@ -2,13 +2,10 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const UserSchema = new Schema({
-    googleId: {
-        type: String
-    },
-    email: {
-        type: String,
-        required: true
-    },
+    googleId: String,
+    firstName: String,
+    lastName: String,
+    username: String,
     date: {
         type: Date,
         default: Date.now

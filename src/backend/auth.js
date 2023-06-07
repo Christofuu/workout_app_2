@@ -21,35 +21,29 @@ passport.use(new GoogleStrategy({
     callbackURL: `http://localhost:${PORT}/auth/google/callback`,
     passReqToCallback: true
   },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ 
-        googleId: profile.id 
-    }, function (err, user) {
-      if (err) {
-        return cb(err);
-      }
-      if (!user) {
-        user = new User({
-            name: profile.displayName,
-            email: profile.emails[0].value
-        });
-        user.save(function(err) {
-            if (err) console.log(err);
-            return cb(err, user);
+  function(req, accessToken, refreshToken, profile, cb) {
+    User.findOne({googleId: profile.id}).then((currentUser) => {
+      if (currentUser) {
+
+        console.log('user is: ' + currentUser);
+      } else {
+        new User({
+          username: profile.displayName,
+          googleId: profile.id,
+          firstName: profile.given_name,
+          lastName: profile.family_name
+        }).save().then((newUser) => {
+          console.log('new user created: ' + newUser);
         });
       }
-      else {
-        return cb(err, user);
-      }
-    });
-  }
-));
+    })
+    console.log(profile);
+}));
 
 
 passport.serializeUser(function(user, cb) {
     process.nextTick(function()  {
-        return cb(null, {
-            email: user.email
+        return cb(null, { id: user.id, username: user.username, name: user.given_name
         });
     });
 });

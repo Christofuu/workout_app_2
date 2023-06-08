@@ -1,22 +1,24 @@
+/**
+ * Required external modules
+ */
 require('dotenv').config();
+require('../auth.js');
 const express = require('express');
 const passport = require('passport');
-const SECRET = process.env.REACT_APP_SESSION_SECRET;
-require('../auth.js');
+
+/**
+ * App variables
+ */
 
 const router = express.Router();
 
-router.use(require('express-session')({
-  secret: SECRET,
-  resave: false,
-  saveUninitialized: true,
-}));
+// session configuration
 router.use(passport.initialize());
 router.use(passport.session());
 
-function isLoggedIn(req, res, next) {
+const isLoggedIn = (req, res, next) => {
     req.user ? next() : res.sendStatus(401);
-}
+};
 
 router.get('/', (req, res) => {
     res.send('<a href="/auth/google">Authenicate with Google</a>')
@@ -26,13 +28,13 @@ router.get('/google', passport.authenticate('google', { scope: 'profile' }), );
 
 router.get('/google/callback', 
   passport.authenticate('google', {
-    successRedirect: '/auth/protected', 
+    successRedirect: '/profile', 
     failureRedirect: '/auth/google/failure' }),
 );
 
 router.get('/protected', isLoggedIn, (req, res) => {
     console.log("authentication successful");
-    res.send(`Hello ${req.user.username}`);
+    res.send(`Hello ${req.user}`);
 });
 
 router.get('/google/failure', (req, res) => {

@@ -25,8 +25,6 @@ passport.use(new GoogleStrategy({
   function(req, accessToken, refreshToken, profile, cb) {
     User.findOne({googleId: profile.id}).then((currentUser) => {
       if (currentUser) {
-
-        console.log('user is: ' + currentUser);
         cb(null, currentUser);
       } else {
         new User({
@@ -35,7 +33,6 @@ passport.use(new GoogleStrategy({
           firstName: profile.given_name,
           lastName: profile.family_name
         }).save().then((newUser) => {
-          console.log('new user created: ' + newUser);
           cb(null, newUser);
         });
       }
@@ -45,14 +42,16 @@ passport.use(new GoogleStrategy({
 
 passport.serializeUser(function(user, cb) {
     process.nextTick(function()  {
-        return cb(null, user.id);
+        return cb(null, {
+          id: user.id,
+          username: user.username,
+        });
     });
 });
 
-passport.deserializeUser(function(id, cb) {
+passport.deserializeUser(function(user, cb) {
     process.nextTick(function() {
-      User.findById(id).then((user) =>
-      cb(null, user))
+      return cb(null, user);
     });
 });
 

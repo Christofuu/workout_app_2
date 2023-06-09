@@ -1,11 +1,13 @@
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: "development",
-    entry: "./src/index.js",
+    entry: path.resolve(__dirname, 'src', 'index.js'),
     output: {
         path: path.resolve(__dirname, "public"),
         filename: "main.js",
+        publicPath: "/"
     },
 
 
@@ -16,10 +18,14 @@ module.exports = {
         open: true,
         hot: true,
         liveReload: true,
+        historyApiFallback: true
     },
 
     resolve: {
         extensions: [".js", ".jsx", ".json", ".ts"],
+        alias: {
+            core: path.join(__dirname, 'core'),
+        },
     },
 
     module: {
@@ -31,4 +37,9 @@ module.exports = {
             },
         ],
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html'
+        })
+    ]
 };

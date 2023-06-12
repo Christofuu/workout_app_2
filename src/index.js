@@ -1,6 +1,7 @@
-const React= require('react');
-const ReactDOM = require('react-dom');
-const App = require('./App')
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import '../src/index.css'
 
 const container = document.getElementById('root');
 

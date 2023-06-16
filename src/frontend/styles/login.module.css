@@ -25,14 +25,22 @@ h1 {
     color: #fff;
 }
 
-h2 {
+.login_wrapper h2 {
     font-family: 'Giga Sans';
-    color: 686868;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 0;
 }
 
-h3 {
+.login_menu h2 {
+    font-family: 'Giga Sans';
+    color: 686868;
+    margin: 2rem;
+}
+
+.login_menu h3 {
     font-family: 'Giga Sans';
     color: 686868;
     margin-top: 0;
@@ -46,7 +54,7 @@ h3 {
     height: 100%;
     max-height: 450px;
     max-width: 250px;
-    margin: 8rem auto;
+    margin: 6rem auto;
 
     background: #D9D9D9;
     filter: drop-shadow(0px 2px 2px rgba(0,0,0, .25));
@@ -57,7 +65,7 @@ h3 {
 .login_menu form {
     display: flex;
     flex-direction: column;
-    margin-top: 1rem;
+    margin-top: .5rem;
 }
 
 .login_menu form button {
@@ -80,9 +88,7 @@ h3 {
 }
 
 .login_menu form button h3 {
-    justify-content: left;
-    width: 60%;
-    
+    width: 60%;  
 }
 
 .icon {

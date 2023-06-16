@@ -2,15 +2,22 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import '../src/index.css'
+import {
+    BrowserRouter
+} from 'react-router-dom'
 
-const container = document.getElementById('root');
+// const container = document.getElementById('root');
 
 // Create a root.
-const root = ReactDOM.createRoot(container);
+// const root = ReactDOM.createRoot(container);
 
 // Initial render
-root.render(<App />);
+// root.render(<App />);
 
-// (() => {
-//     console.log('webpack working');
-// })();
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </React.StrictMode>
+);

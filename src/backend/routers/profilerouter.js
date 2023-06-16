@@ -1,25 +1,15 @@
 const express = require('express');
-require('../auth');
 require('../routers/authrouter');
-const passport = require('passport');
 
 const router = express.Router();
 
-router.use(passport.initialize());
-router.use(passport.session());
-
 const isLoggedIn = (req, res, next) => {
-    console.log(req.user);
-    if (!req.user) {
-        res.redirect('/auth/');
-    } else {
-        // if logged in
-        next();
-    }
-};
+    console.log(req.isAuthenticated(), req.user);
+      return req.isAuthenticated() ? next() : res.sendStatus(401);    
+  };
 
 router.get('/', isLoggedIn, (req, res) => {
-    res.send(`you are logged in ${req.user.username}`);
+    res.send('user logged in, redirecting to profile')
 });
 
 module.exports = router;

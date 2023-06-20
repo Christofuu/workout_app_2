@@ -5,6 +5,7 @@ import {
  } from 'react-router-dom'
 import Login from '../src/frontend/components/Login'
 import Mainmenu from './frontend/components/Mainmenu'
+import MagicLogin from './frontend/components/MagicLogin'
 
 export default function App() {
     
@@ -15,6 +16,7 @@ export default function App() {
             element={<Login/>}
             />
             <Route path="/main-menu" element={<Mainmenu />} />
+            <Route path='/magic-login' element={<MagicLogin />} />
         </Routes>
     )
 };

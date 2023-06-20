@@ -2,8 +2,6 @@ require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('./models/User');
 const app = express();
 const session = require('express-session');
 const cors = require('cors');
@@ -54,7 +52,7 @@ mongoose.connect(URI, {
     .catch((err) => console.log(err));
 
 app.use('/auth', authRouter);
-app.use('/', profileRouter);
+app.use('/profile', profileRouter);
 
 app.post('/logout', (req, res, next) => {
   req.logout(function(err) {

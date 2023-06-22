@@ -6,7 +6,7 @@ const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const MagicLoginStrategy = require('passport-magic-login').default;
+const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../models/User');
 
 /**
@@ -18,10 +18,11 @@ const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
 const FACEBOOK_CLIENT_SECRET = process.env.REACT_APP_FACEBOOK_CLIENT_SECRET;
 const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID;
-const MAGIC_LOGIN_SECRET = process.env.REACT_APP_MAGIC_LOGIN_SECRET;
+const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
 
 /**
- * Authentication strategy configurations
+ * Authentication strategies
  */
 
 passport.use(new GoogleStrategy({
@@ -57,39 +58,27 @@ passport.use(new FacebookStrategy({
     cb(null, profile)
 }));
 
-const magicLogin = new MagicLoginStrategy({
-  secret: MAGIC_LOGIN_SECRET,
-  callbackUrl: `http://localhost:${PORT}/auth/magiclogin/callback`,
-
-  sendMagicLink: async(destination, href) => {
-    await sendEmail({
-      to: destination,
-      body: `Click this link to finish logging in to LiftBuddy: http://localhost:${PORT}${href}`
-    })
-  },
-
-  verify: (payload, cb) => {
-    // Get or create a user with the provided email from the database
-    User.findOne({email: payload}).then((currentUser) => {
+passport.use(new GitHubStrategy({
+  clientID: GITHUB_CLIENT_ID,
+  clientSecret: GITHUB_CLIENT_SECRET,
+  callbackURL: `http://localhost:${PORT}/auth/github/callback`
+},
+  function(req, accessToken, refreshToken, profile, cb) {
+    User.findOne({ githubId: profile.id }).then((currentUser) => {
       if (currentUser) {
-        return (null, currentUser)
-      }
-      else {
+        cb(null, currentUser);
+      } else {
         new User({
-          email: payload
+          githubId: profile.id,
+          email: profile.email
         }).save().then((newUser) => {
           cb(null, newUser)
         })
       }
     })
-  },
-
-  jwtOptions: {
-    expiresIn: "2 days",
   }
-})
+))
 
-passport.use(magicLogin)
 
 
 passport.serializeUser(function(user, cb) {
@@ -138,8 +127,8 @@ router.get('/google', passport.authenticate('google', { scope: 'profile' }), );
 
 router.get('/google/callback', 
   passport.authenticate('google', {
-    successRedirect: '/main-menu', 
-    failureRedirect: '/auth/' }),
+    successRedirect: 'http://localhost:3000/main-menu', 
+    failureRedirect: '/' }),
 );
 
 /**
@@ -150,16 +139,22 @@ router.get('/facebook', passport.authenticate('facebook'));
 
 router.get('/facebook/callback',
   passport.authenticate('facebook', {
-    successRedirect: '/main-menu',
-    failureRedirect: '/auth/'
+    successRedirect: 'http://localhost:3000/main-menu',
+    failureRedirect: '/'
   })
 )
 
 /**
- * Email authentication routes
+ * Github authentication routes
  */
-router.post('/magiclogin', magicLogin.send);
-router.get('/magiclogin', passport.authenticate('magiclogin'))
+
+router.get('/github', passport.authenticate('github', { scope: [ 'user:email' ]}))
+
+router.get('/github/callback',
+  passport.authenticate('github', {
+    successRedirect: 'http://localhost:3000/main-menu',
+    failureRedirect: '/'
+}))
 
 
 module.exports = router;

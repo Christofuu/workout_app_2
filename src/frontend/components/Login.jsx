@@ -1,10 +1,9 @@
 import React from 'react'
 import styles from '../styles/login.module.css'
-import { Link } from 'react-router-dom'
 import { BsGoogle } from 'react-icons/bs'
 import { FaFacebookF } from 'react-icons/fa'
-import { MdEmail } from 'react-icons/md'
 import { GiWeightLiftingUp } from 'react-icons/gi'
+import { AiFillGithub } from 'react-icons/ai'
 
 export default function Login() {
 
@@ -31,14 +30,14 @@ export default function Login() {
                     </div>
                 </button>
                 </a>
-                <Link to='/magic-login'>
-                <button type="button" name="emailSignIn" value="Email">
-                    <h3>Email</h3> 
+                <a href='http://localhost:5000/auth/github'>
+                <button type="button" name="githubSignIn" value="Github">
+                    <h3>Github</h3> 
                     <div className={styles.icon}>
-                        <MdEmail />
+                        <AiFillGithub />
                     </div>
                 </button>
-                </Link>
+                </a>
                 <button type="button" name="noLogin" value="noLogin" >
                     <h3>Try it out</h3> 
                     <div className={styles.icon}>

@@ -8,6 +8,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../models/User');
+const { isLoggedIn } = require('../middleware/usermiddleware');
 
 /**
  * App Variables
@@ -39,6 +40,7 @@ passport.use(new GoogleStrategy({
         new User({
           username: profile.displayName,
           googleId: profile.id,
+          email: profile.emails[0].value,
           firstName: profile.given_name,
           lastName: profile.family_name
         }).save().then((newUser) => {
@@ -64,13 +66,13 @@ passport.use(new GitHubStrategy({
   callbackURL: `http://localhost:${PORT}/auth/github/callback`
 },
   function(req, accessToken, refreshToken, profile, cb) {
-    User.findOne({ githubId: profile.id }).then((currentUser) => {
+    User.findOne({$or: [ {githubId: profile.id}, {email: profile.emails[0].value} ]}).then((currentUser) => {
       if (currentUser) {
         cb(null, currentUser);
       } else {
         new User({
           githubId: profile.id,
-          email: profile.email
+          email: profile.emails[0].value
         }).save().then((newUser) => {
           cb(null, newUser)
         })
@@ -99,18 +101,6 @@ passport.deserializeUser(function(user, cb) {
 
 const router = express.Router();
 
-/**
- * Middleware for authenticating users before redirecting them to authenticated routes
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
- */
-const isLoggedIn = (req, res, next) => {
-  console.log(req.isAuthenticated(), req.user);
-    return req.isAuthenticated() ? next() : res.sendStatus(401);    
-};
-
 router.get('/check', passport.authenticate('session'), isLoggedIn, (req, res) => {
     res.json({status: 'success'});
 });
@@ -123,7 +113,7 @@ router.get('/', (req, res) => {
 /**
  * Google authentication routes
  */
-router.get('/google', passport.authenticate('google', { scope: 'profile' }), );
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }), );
 
 router.get('/google/callback', 
   passport.authenticate('google', {

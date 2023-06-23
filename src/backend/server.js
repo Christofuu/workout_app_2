@@ -10,6 +10,7 @@ const passport = require('passport');
 
 const authRouter = require('../backend/routers/authrouter');
 const profileRouter = require('../backend/routers/profilerouter');
+const userRouter = require('../backend/routers/userrouter');
 const PORT = process.env.REACT_APP_PORT;
 const URI = process.env.REACT_APP_MONGO_URI;
 const SECRET = process.env.REACT_APP_SESSION_SECRET;
@@ -53,6 +54,7 @@ mongoose.connect(URI, {
 
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
+app.use('/user', userRouter);
 
 app.post('/logout', (req, res, next) => {
   req.logout(function(err) {

@@ -12,7 +12,20 @@ const UserSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    splits: [
+        {
+            splitName: String,
+            exercises: [
+                {
+                    name: String,
+                    muscleGroup: String,
+                    // sets: Int32,
+                    // reps: Int32
+                }
+            ]
+        }
+    ]
 });
 
 const User = model("User", UserSchema);

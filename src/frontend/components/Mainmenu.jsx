@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from '../styles/mainmenu.module.css'
 import axios from 'axios'
 import {
@@ -7,20 +7,32 @@ import {
 import { BiCog } from 'react-icons/bi'
 import { AiOutlinePlusCircle } from 'react-icons/ai'
 
+function SplitMenu({ email }) {
+
+    return (
+        <div className={styles.templates_wrapper}>
+            <div className={styles.templates_header}><AiOutlinePlusCircle></AiOutlinePlusCircle><h2>Split Name</h2><BiCog></BiCog></div>
+            <div className={styles.templates_content}>{ email }</div>
+        </div>
+    )
+}
+
 export default function Mainmenu() {
     const navigate = useNavigate()
+    const [user, setUser] = useState({})
+
+
 
     useEffect(() => {
         let isMounted = true; // flag to keep track of component mount status
     
         const checkIfUserIsLoggedIn = async () => {
             try {
-                const isLoggedIn = await axios.get('http://localhost:5000/auth/check', { withCredentials: true });
+                await axios.get('http://localhost:5000/auth/check', { withCredentials: true });
     
-                if (isMounted) {
-                    console.log("main-menu: user is logged in", isLoggedIn);
-                    navigate('/main-menu');
-                }
+                // if (isMounted) {
+                //     navigate('/main-menu');
+                // }
     
             } catch (err) {
                 console.log("auth check error ", err);
@@ -30,8 +42,19 @@ export default function Mainmenu() {
                 }
             }
         }
-    
+        
+        const getUserData = async () => {
+            try {
+                const userData = await axios.get('http://localhost:5000/user', { withCredentials: true });
+                console.log(userData);
+                setUser(userData.data.user)
+            } catch (err) {
+                console.log("user get data ", err);
+            }
+        }
+
         checkIfUserIsLoggedIn();
+        getUserData();
     
         // cleanup function
         return () => {
@@ -65,9 +88,6 @@ export default function Mainmenu() {
             <button><h2>Start Today's Lift</h2></button>
             <button onClick={logout}><h2>Log out</h2></button>
         </div>
-        <div className={styles.templates_wrapper}>
-            <div className={styles.templates_header}><AiOutlinePlusCircle></AiOutlinePlusCircle><h2>Split 1</h2><BiCog></BiCog></div>
-            <div className={styles.templates_content}>Function that pulls user templates and displays appropiate content</div>
-        </div>
+        <SplitMenu email={ user.email }/>
     </div>
 )}

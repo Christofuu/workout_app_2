@@ -20,8 +20,8 @@ const UserSchema = new Schema({
                 {
                     name: String,
                     muscleGroup: String,
-                    // sets: Int32,
-                    // reps: Int32
+                    // sets: Number,
+                    // reps: Number
                 }
             ]
         }

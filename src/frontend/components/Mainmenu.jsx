@@ -6,21 +6,29 @@ import {
 } from 'react-router-dom'
 import { BiCog } from 'react-icons/bi'
 import { AiOutlinePlusCircle } from 'react-icons/ai'
-
-function SplitMenu({ email }) {
-
-    return (
-        <div className={styles.templates_wrapper}>
-            <div className={styles.templates_header}><AiOutlinePlusCircle></AiOutlinePlusCircle><h2>Split Name</h2><BiCog></BiCog></div>
-            <div className={styles.templates_content}>{ email }</div>
-        </div>
-    )
-}
+import { ImCheckmark } from 'react-icons/im'
 
 export default function Mainmenu() {
     const navigate = useNavigate()
     const [user, setUser] = useState({})
+    const [createSplit, setCreateSplit] = useState(false)
+    const [createWorkout, setCreateWorkout] = useState(false)
 
+    const handleCreateSplit = () => {
+        setCreateSplit(true);
+    }
+
+    const handleFinishCreateSplit = () => {
+        setCreateSplit(false)
+    }
+
+    const handleCreateWorkout = () => {
+        setCreateWorkout(true);
+    }
+
+    const handleFinishCreateWorkout = () => {
+        setCreateWorkout(false);
+    }
 
 
     useEffect(() => {
@@ -29,10 +37,6 @@ export default function Mainmenu() {
         const checkIfUserIsLoggedIn = async () => {
             try {
                 await axios.get('http://localhost:5000/auth/check', { withCredentials: true });
-    
-                // if (isMounted) {
-                //     navigate('/main-menu');
-                // }
     
             } catch (err) {
                 console.log("auth check error ", err);
@@ -79,15 +83,57 @@ export default function Mainmenu() {
             })
     }
 
-    return (
-    <div className={styles.main_menu_wrapper}>
-        
-        <div className={styles.quick_start_buttons_wrapper}>
-            <h1>Your Workouts</h1>
-            <button><h2>Quick Start</h2></button>
-            <button><h2>Start Today's Lift</h2></button>
-            <button onClick={logout}><h2>Log out</h2></button>
-        </div>
-        <SplitMenu email={ user.email }/>
-    </div>
-)}
+     if (createSplit == false) {
+        return (
+            <div className={styles.main_menu_wrapper}>
+                
+                <div className={styles.quick_start_buttons_wrapper}>
+                    <h1>Your Workouts</h1>
+                    <button><h2>Quick Start</h2></button>
+                    <button><h2>Start Today's Lift</h2></button>
+                    <button onClick={logout}><h2>Log out</h2></button>
+                </div>
+                <div className={styles.templates_wrapper}>
+                    <div className={styles.templates_header}><AiOutlinePlusCircle onClick={handleCreateSplit}></AiOutlinePlusCircle><h2>Split Name</h2><a name="splitSettings"><BiCog></BiCog></a></div>
+                    <div className={styles.templates_content}>{ user.email }</div>
+                </div>
+            </div>
+    )}
+    else if (createWorkout == false) {
+        return (
+            <div className={styles.create_split_wrapper}>
+            <h1>Create a new split</h1>
+                <div className={styles.create_split_menu}>
+                    <div className={styles.create_split_workout_grid}>
+                        <BiCog></BiCog>
+                        <h2>Name Your Split</h2>
+                        <ImCheckmark></ImCheckmark>
+                        <div className={styles.create_split_workout_grid_boxes} onClick={handleCreateWorkout}>Click to create a workout</div>
+                        <div className={styles.create_split_workout_grid_boxes} onClick={handleCreateWorkout}>Click to create a workout</div>
+                        <div className={styles.create_split_workout_grid_boxes} onClick={handleCreateWorkout}>Click to create a workout</div>
+                        <div className={styles.create_split_workout_grid_boxes} onClick={handleCreateWorkout}>Click to create a workout</div>
+                        <div className={styles.create_split_workout_grid_boxes} onClick={handleCreateWorkout}>Click to create a workout</div>
+                        <div className={styles.create_split_workout_grid_boxes} onClick={handleCreateWorkout}>Click to create a workout</div>
+                        <button onClick={handleFinishCreateSplit}>Back</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    else if (createWorkout == true) {
+        return (
+            <div className={styles.create_split_wrapper}>
+                <h1>Create Workout for Split Name</h1>
+                <div className={styles.create_workout_menu}>
+                    <h2>Name your workout</h2>
+                    <div className={styles.create_workout_menu_exercise}>
+                        <span>exercise </span>
+                        <span>reps </span>
+                        <span>weight </span>
+                    </div>
+                    <button onClick={handleFinishCreateWorkout}>Go back</button>
+                </div>
+            </div>
+        )
+    }
+}

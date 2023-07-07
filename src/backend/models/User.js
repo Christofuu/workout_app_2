@@ -16,14 +16,20 @@ const UserSchema = new Schema({
     splits: [
         {
             splitName: String,
-            exercises: [
+            workout: [
                 {
-                    name: String,
-                    muscleGroup: String,
-                    // sets: Number,
-                    // reps: Number
+                    workoutName: String,
+                    exercises: [
+                        {
+                            name: String,
+                            muscleGroup: String,
+                            // sets: Number,
+                            // reps: Number
+                        }
+                    ]
                 }
-            ]
+            ],
+            
         }
     ]
 });

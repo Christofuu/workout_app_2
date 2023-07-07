@@ -154,8 +154,40 @@ h2 {
     margin-left: .5rem;
     margin-right: .5rem;
     display: flex;
+    flex-flow: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
+}
+
+.create_workout_menu_exercise_sets {
+    background-color:#494949;
+    filter: drop-shadow(0px 2px 2px rgba(0,0,0, .25));
+    border-radius: .25rem;
+    min-height: 3rem;
+    min-width: 95%;
+    margin-bottom: 1rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.create_workout_menu_edit_set{
+    min-width: 50%;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.create_workout_menu_edit_set button {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    min-width: 25%;
+    height: 2.5rem;
 }
 
 .create_workout_menu h2 {
